@@ -1,6 +1,15 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## anggota cukup melakukan ini di laptop masing-masing:
+
+git clone https://github.com/username-ketua/atc-simulation-visualizer.git
+
+cd atc-simulation-visualizer
+
+npm install (Ini akan men-download semua library yang sudah disiapkan ketua).
+
+npm start untuk menjalankan aplikasi.
 
 ## Available Scripts
 
