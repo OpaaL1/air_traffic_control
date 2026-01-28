@@ -4,7 +4,7 @@ import ControlPanel from './components/ControlPanel';
 import RadarCanvas from './components/RadarCanvas';
 
 function App() {
-  // State untuk menyimpan koordinat pesawat
+  // State untuk menyimpan koordinat pesawat seperti x atau y
   const [points, setPoints] = useState([]);
 
   return (
