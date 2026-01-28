@@ -4,7 +4,7 @@ function distance(a, b) {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
 
-/* ================= CLOSEST PAIR (D&C) ================= */
+/* ================= CLOSEST PAIR (D&C) =========== */
 function closestPair(points) {
   if (points.length < 2) return null;
 
