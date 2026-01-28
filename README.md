@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Jangan lupa baca ini
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 ## anggota cukup melakukan ini di laptop masing-masing:
