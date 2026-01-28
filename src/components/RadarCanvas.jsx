@@ -104,12 +104,11 @@ function RadarCanvas({ points }) {
     ctx.clip();
 
     /* === Draw Points === */
-    ctx.fillStyle = "#00ff00";
     points.forEach(p => {
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
-      ctx.fill();
-    });
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#00ff00";
+    ctx.fillText("✈", p.x - 8, p.y + 6);
+  });
 
     if (points.length >= 2) {
       const result = closestPair(points);
