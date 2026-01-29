@@ -1,40 +1,62 @@
 import React from 'react';
 
-const DividingLine = ({ x, color = '#ff0055', label = 'D&C Split' }) => {
-  // Jika koordinat x tidak ada, jangan gambar apa-apa
+const DividingLine = ({
+  x,
+  color = '#ff0055',
+  label = 'D&C Split'
+}) => {
   if (x === undefined || x === null) return null;
 
   return (
-    <div
-      style={{
-        position: 'absolute',
-        left: `${x}px`,
-        top: 0,
-        bottom: 0,
-        width: '2px',
-        backgroundColor: color,
-        boxShadow: `0 0 8px ${color}`, // Efek glow neon
-        zIndex: 10,
-        transition: 'all 0.5s ease-in-out', // Animasi halus saat garis berpindah
-      }}
-    >
-      {/* Label kecil di atas garis */}
-      <span
+    <>
+      
+      <div
         style={{
           position: 'absolute',
-          top: '5px',
-          left: '5px',
+          left: `${x}px`,
+          top: 0,
+          bottom: 0,
+          width: '2px',
+          backgroundColor: color,
+          boxShadow: `0 0 8px ${color}`,
+          zIndex: 10
+        }}
+      />
+
+      
+      <div
+        style={{
+          position: 'absolute',
+          left: `${x - 4}px`,
+          top: '50%',               
+          transform: 'translateY(-50%)',
+          width: '8px',
+          height: '8px',
+          borderRadius: '50%',
+          backgroundColor: color,
+          boxShadow: `0 0 10px ${color}`,
+          zIndex: 11
+        }}
+      />
+
+      <div
+        style={{
+          position: 'absolute',
+          left: `${x + 8}px`,
+          top: '50%',
+          transform: 'translateY(-150%)',
           fontSize: '10px',
           color: color,
-          whiteSpace: 'nowrap',
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          padding: '2px 5px',
-          borderRadius: '3px'
+          backgroundColor: 'rgba(0,0,0,0.7)',
+          padding: '2px 6px',
+          borderRadius: '4px',
+          zIndex: 12,
+          whiteSpace: 'nowrap'
         }}
       >
-        {label}
-      </span>
-    </div>
+        x: {Math.round(x)} | y: 50%
+      </div>
+    </>
   );
 };
 
