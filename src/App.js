@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ControlPanel from './components/ControlPanel';
 import RadarCanvas from './components/RadarCanvas';
+import DividingLine from'./components/DividingLine';
 
 function App() {
   // State untuk menyimpan koordinat pesawat seperti x atau y
