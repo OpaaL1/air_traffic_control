@@ -1,63 +1,27 @@
-import React from 'react';
+// DividingLine.jsx
 
-const DividingLine = ({
+export function drawDividingLine({
+  ctx,
   x,
-  color = '#ff0055',
-  label = 'D&C Split'
-}) => {
-  if (x === undefined || x === null) return null;
+  canvasSize,
+  color = "#ff0055"
+}) {
+  if (x === null || x === undefined) return;
 
-  return (
-    <>
-      
-      <div
-        style={{
-          position: 'absolute',
-          left: `${x}px`,
-          top: 0,
-          bottom: 0,
-          width: '2px',
-          backgroundColor: color,
-          boxShadow: `0 0 8px ${color}`,
-          zIndex: 10
-        }}
-      />
+  ctx.save();
 
-      
-      <div
-        style={{
-          position: 'absolute',
-          left: `${x - 4}px`,
-          top: '50%',               
-          transform: 'translateY(-50%)',
-          width: '8px',
-          height: '8px',
-          borderRadius: '50%',
-          backgroundColor: color,
-          boxShadow: `0 0 10px ${color}`,
-          zIndex: 11
-        }}
-      />
+  ctx.beginPath();
+  ctx.moveTo(x, 0);
+  ctx.lineTo(x, canvasSize);
 
-      <div
-        style={{
-          position: 'absolute',
-          left: `${x + 8}px`,
-          top: '50%',
-          transform: 'translateY(-150%)',
-          fontSize: '10px',
-          color: color,
-          backgroundColor: 'rgba(0,0,0,0.7)',
-          padding: '2px 6px',
-          borderRadius: '4px',
-          zIndex: 12,
-          whiteSpace: 'nowrap'
-        }}
-      >
-        x: {Math.round(x)} | y: 50%
-      </div>
-    </>
-  );
-};
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.setLineDash([6, 6]); // ATC dashed line
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 6;
 
-export default DividingLine;
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+  ctx.restore();
+}
