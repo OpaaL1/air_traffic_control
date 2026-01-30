@@ -2,32 +2,21 @@ import React, { useState, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ControlPanel from './components/ControlPanel';
 import RadarCanvas from './components/RadarCanvas';
+import { calculateMetrics } from './logic/LogicDivideAndConquer'; // Import fungsi metrik
 
 function App() {
-  // State data pesawat
   const [points, setPoints] = useState([]);
-
-  // State untuk data analisis algoritma (MENGATASI ERROR NO-UNDEF)
   const [analysis, setAnalysis] = useState({
     distance: 0,
     pair: null,
   });
 
-  // Fungsi untuk menerima update data dari RadarCanvas
-  // useCallback digunakan agar fungsi tidak dibuat ulang setiap render (performa)
   const updateAnalysis = useCallback((data) => {
     setAnalysis(data);
   }, []);
 
-  // Estimasi langkah Divide & Conquer: n * log2(n)
-  const stepsDC = points.length > 0 
-    ? Math.round(points.length * Math.log2(points.length)) 
-    : 0;
-
-  // Estimasi langkah Brute Force: n * (n-1) / 2
-  const stepsBF = points.length > 0 
-    ? (points.length * (points.length - 1)) / 2 
-    : 0;
+  // Mengambil metrik performa dari file logika
+  const metrics = calculateMetrics(points.length);
 
   return (
     <div className="container-fluid bg-dark text-white vh-100 p-0 overflow-hidden">
@@ -42,18 +31,12 @@ function App() {
       <div className="row g-0 h-100">
         {/* KIRI: CONTROL PANEL */}
         <div className="col-md-3 border-end border-secondary p-4 bg-dark bg-opacity-25">
-          <ControlPanel
-            points={points}
-            setPoints={setPoints}
-          />
+          <ControlPanel points={points} setPoints={setPoints} />
         </div>
 
         {/* TENGAH: RADAR DISPLAY */}
         <div className="col-md-6 d-flex align-items-center justify-content-center bg-black">
-          <RadarCanvas
-            points={points}
-            setAnalysis={updateAnalysis} // Mengirim fungsi ke RadarCanvas
-          />
+          <RadarCanvas points={points} setAnalysis={updateAnalysis} />
         </div>
 
         {/* KANAN: ALGORITHM ANALYSIS */}
@@ -84,17 +67,20 @@ function App() {
               <tbody>
                 <tr>
                   <td>Complexity</td>
-                  <td>$O(n^2)$</td>
-                  <td>$O(n \log n)$</td>
+                  {/* Perbaikan: Menggunakan tag sup agar pangkat terlihat rapi tanpa karakter aneh */}
+                  <td>O(n<sup>2</sup>)</td>
+                  <td className="text-info fw-bold">O(n log n)</td>
                 </tr>
                 <tr>
                   <td>Est. Steps</td>
-                  <td>{stepsBF}</td>
-                  <td className="text-success fw-bold">{stepsDC}</td>
+                  <td>{metrics.bf}</td>
+                  <td className="text-success fw-bold">{metrics.dc}</td>
                 </tr>
                 <tr>
-                  <td>Points</td>
-                  <td colSpan="2" className="text-center">{points.length} Aircraft</td>
+                  <td>Efficiency</td>
+                  <td colSpan="2" className="text-center text-warning small">
+                    D&C is {metrics.efficiency}% more efficient
+                  </td>
                 </tr>
               </tbody>
             </table>
