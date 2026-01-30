@@ -10,6 +10,7 @@ const RADIUS = SIZE / 2 - 10;
 const ALERT_THRESHOLD = 60;
 
 function RadarCanvas({ points, setAnalysis }) {
+
   const canvasRef = useRef(null);
   const pointsRef = useRef(points);
   const sweepAngleRef = useRef(0);
@@ -32,10 +33,11 @@ function RadarCanvas({ points, setAnalysis }) {
       ctx.arc(CENTER, CENTER, RADIUS, 0, Math.PI * 2);
       ctx.strokeStyle = "#00ff00";
       ctx.lineWidth = 2;
-      ctx.stroke();
 
+      ctx.stroke();
       ctx.strokeStyle = "#006600";
       ctx.lineWidth = 1;
+
       for (let r = RADIUS / 4; r < RADIUS; r += RADIUS / 4) {
         ctx.beginPath();
         ctx.arc(CENTER, CENTER, r, 0, Math.PI * 2);
@@ -43,6 +45,7 @@ function RadarCanvas({ points, setAnalysis }) {
       }
 
       /* === 2. KONTEN RADAR (MAP & LOGIC) === */
+
       ctx.save();
       ctx.beginPath();
       ctx.arc(CENTER, CENTER, RADIUS, 0, Math.PI * 2);
@@ -51,9 +54,11 @@ function RadarCanvas({ points, setAnalysis }) {
       drawRadarMap(ctx, CENTER);
 
       // Eksekusi Algoritma Divide and Conquer
+
       const result = findClosestPair(pointsRef.current);
 
       // Update data ke App.js (Algorithm Analysis)
+
       if (setAnalysis && result) {
         setAnalysis({
           distance: result.min,
@@ -78,7 +83,10 @@ function RadarCanvas({ points, setAnalysis }) {
         color: lineColor,
       });
 
+
+
       /* === 3. SCANNING BEAM === */
+
       ctx.save();
       ctx.translate(CENTER, CENTER);
       ctx.rotate(sweepAngleRef.current);
@@ -95,6 +103,7 @@ function RadarCanvas({ points, setAnalysis }) {
       sweepAngleRef.current += 0.02;
 
       /* === 4. RENDERING PESAWAT === */
+
       pointsRef.current.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
@@ -102,7 +111,10 @@ function RadarCanvas({ points, setAnalysis }) {
         const isConflict = result.pair && (p === result.pair[0] || p === result.pair[1]) && result.min < ALERT_THRESHOLD;
         const aircraftColor = isConflict ? "#ff0055" : "#00ff00";
 
+
+
         // Ikon Pesawat
+
         const angle = Math.atan2(p.vy, p.vx);
         ctx.save();
         ctx.translate(p.x, p.y);
@@ -115,10 +127,14 @@ function RadarCanvas({ points, setAnalysis }) {
         // --- PERBAIKAN LABEL: Baris Bertumpuk ---
         ctx.fillStyle = aircraftColor;
         ctx.font = "10px Monospace";
+
         // Baris 1: ID/Callsign
         ctx.fillText(p.id, p.x + 12, p.y - 10);
+
         // Baris 2: Altitude (F) diletakkan di bawah baris 1
         ctx.fillText(`F${p.alt}`, p.x + 12, p.y + 2);
+
+
 
         // --- PERBAIKAN LOGIKA RESPAWN: Muncul dari Tepi ---
         if (p.x < -30 || p.x > SIZE + 30 || p.y < -30 || p.y > SIZE + 30) {
@@ -127,7 +143,7 @@ function RadarCanvas({ points, setAnalysis }) {
           else if (side === 1) { p.x = SIZE + 20; p.y = Math.random() * SIZE; } // Dari Kanan
           else if (side === 2) { p.x = Math.random() * SIZE; p.y = -20; } // Dari Atas
           else { p.x = Math.random() * SIZE; p.y = SIZE + 20; }          // Dari Bawah
-          
+
           // Generate data baru agar pesawat tidak terlihat sama
           p.id = `AC${Math.floor(1000 + Math.random() * 9000)}`;
           p.alt = Math.floor(Math.random() * 30) + 100;
@@ -146,16 +162,14 @@ function RadarCanvas({ points, setAnalysis }) {
         ctx.stroke();
         ctx.setLineDash([]);
       }
-
       ctx.restore();
       animationId = requestAnimationFrame(animate);
     };
-
     animate();
     return () => cancelAnimationFrame(animationId);
-  }, [setAnalysis]); 
-
+  }, [setAnalysis]);
   return (
+
     <canvas
       ref={canvasRef}
       width={SIZE}
@@ -165,8 +179,13 @@ function RadarCanvas({ points, setAnalysis }) {
         borderRadius: "50%",
         boxShadow: "0 0 20px rgba(0, 255, 0, 0.2)",
       }}
+
     />
+
   );
+
 }
+
+
 
 export default RadarCanvas;
