@@ -95,7 +95,7 @@ function RadarCanvas({ points, setAnalysis }) {
       sweepAngleRef.current += 0.02;
 
       /* === 4. RENDERING PESAWAT === */
-      pointsRef.current.forEach((p, index) => {
+      pointsRef.current.forEach((p) => {
         p.x += p.vx;
         p.y += p.vy;
 
@@ -112,15 +112,25 @@ function RadarCanvas({ points, setAnalysis }) {
         ctx.fillText("✈", -8, 6);
         ctx.restore();
 
-        // Label Pesawat
+        // --- PERBAIKAN LABEL: Baris Bertumpuk ---
         ctx.fillStyle = aircraftColor;
         ctx.font = "10px Monospace";
-        ctx.fillText(`AC${100 + index}`, p.x + 12, p.y - 10);
+        // Baris 1: ID/Callsign
+        ctx.fillText(p.id, p.x + 12, p.y - 10);
+        // Baris 2: Altitude (F) diletakkan di bawah baris 1
+        ctx.fillText(`F${p.alt}`, p.x + 12, p.y + 2);
 
-        // Logika Respawn (agar pesawat tidak hilang dari layar)
-        if (p.x < -50 || p.x > SIZE + 50 || p.y < -50 || p.y > SIZE + 50) {
-          p.x = Math.random() * SIZE;
-          p.y = Math.random() * SIZE;
+        // --- PERBAIKAN LOGIKA RESPAWN: Muncul dari Tepi ---
+        if (p.x < -30 || p.x > SIZE + 30 || p.y < -30 || p.y > SIZE + 30) {
+          const side = Math.floor(Math.random() * 4);
+          if (side === 0) { p.x = -20; p.y = Math.random() * SIZE; }      // Dari Kiri
+          else if (side === 1) { p.x = SIZE + 20; p.y = Math.random() * SIZE; } // Dari Kanan
+          else if (side === 2) { p.x = Math.random() * SIZE; p.y = -20; } // Dari Atas
+          else { p.x = Math.random() * SIZE; p.y = SIZE + 20; }          // Dari Bawah
+          
+          // Generate data baru agar pesawat tidak terlihat sama
+          p.id = `AC${Math.floor(1000 + Math.random() * 9000)}`;
+          p.alt = Math.floor(Math.random() * 30) + 100;
         }
       });
 
