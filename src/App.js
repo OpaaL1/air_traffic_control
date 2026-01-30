@@ -23,7 +23,7 @@ function App() {
       {/* Header Area */}
       <header className="p-3 border-bottom border-secondary bg-black d-flex justify-content-between align-items-center">
         <h4 className="m-0 text-success fw-bold">
-          ATC COLLISION PREDICTION SYSTEM
+          SISTEM ATC PESAWAT
         </h4>
         <span className="badge border border-success text-success small">RADAR ACTIVE</span>
       </header>
