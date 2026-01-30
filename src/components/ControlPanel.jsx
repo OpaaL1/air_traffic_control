@@ -6,24 +6,25 @@ function ControlPanel({ points, setPoints }) {
   const [count, setCount] = useState(20);
 
   const generatePoints = () => {
-    const newPoints = [];
+  const newPoints = [];
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const randomAlt = Math.floor(Math.random() * 30) + 100; // Contoh: F100 - F130
 
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      // Menambahkan Altitude (FL) acak saat generate
-      const randomAlt = Math.floor(Math.random() * 300) + 100;
+    newPoints.push({
+      id: `AC${Math.floor(1000 + Math.random() * 9000)}`, // Menambah Callsign unik
+      x: Math.random() * 500,
+      y: Math.random() * 500,
+      vx: Math.cos(angle) * SPEED,
+      vy: Math.sin(angle) * SPEED,
+      alt: randomAlt,
+      history: [], // Akan menyimpan {x, y}
+      isConflict: false // Flag untuk status bahaya
+  });
+  }
 
-      newPoints.push({
-        x: Math.random() * 500,
-        y: Math.random() * 500,
-        vx: Math.cos(angle) * SPEED,
-        vy: Math.sin(angle) * SPEED,
-        alt: randomAlt
-      });
-    }
-
-    setPoints(newPoints);
-  };
+  setPoints(newPoints);
+};
 
   return (
     <div className="card bg-dark text-light border-success shadow-lg" style={{ borderRadius: '15px', overflow: 'hidden' }}>
