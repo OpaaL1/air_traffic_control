@@ -3,53 +3,64 @@ export function drawDividingLine({
   ctx,
   x,
   canvasSize,
-  color = "#ff0055"
+  planes = [],
+  dangerDistance = 25
 }) {
   if (x === null || x === undefined) return;
 
+  const time = Date.now();
   ctx.save();
 
-  /* ================= MAIN LINE ================= */
+  /* ================= ANIMATED GLOW LINE ================= */
+  ctx.lineWidth = 3;
+  ctx.setLineDash([10, 8]);
+  ctx.lineDashOffset = -time / 40;
+
+  // Glow layer
+  ctx.strokeStyle = "#ff0055";
+  ctx.shadowColor = "#ff0055";
+  ctx.shadowBlur = 15;
+
   ctx.beginPath();
   ctx.moveTo(x, 0);
   ctx.lineTo(x, canvasSize);
+  ctx.stroke();
 
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-  ctx.setLineDash([8, 6]); // lebih rapi
-  ctx.shadowColor = color;
-  ctx.shadowBlur = 8;
+  // Core line
+  ctx.shadowBlur = 0;
+  ctx.lineWidth = 1.5;
+  ctx.strokeStyle = "#ffffff";
 
+  ctx.beginPath();
+  ctx.moveTo(x, 0);
+  ctx.lineTo(x, canvasSize);
   ctx.stroke();
 
   ctx.setLineDash([]);
-  ctx.shadowBlur = 0;
 
-  /* ================= CENTER MARKER ================= */
+  /* ================= X LABEL ================= */
   const midY = canvasSize / 2;
-
-  ctx.beginPath();
-  ctx.arc(x, midY, 5, 0, Math.PI * 2);
-  ctx.fillStyle = color;
-  ctx.fill();
-
-  /* ================= LABEL ================= */
-  ctx.fillStyle = color;
+  const label = `X : ${Math.round(x)}`;
   ctx.font = "11px monospace";
-  ctx.textAlign = "left";
+  const textWidth = ctx.measureText(label).width;
 
-  ctx.fillText(`X = ${Math.round(x)}`, x + 8, midY - 8);
+  ctx.fillStyle = "rgba(0,0,0,0.6)";
+  ctx.fillRect(x + 8, midY - 22, textWidth + 8, 16);
 
-  /* ================= TOP & BOTTOM TICKS ================= */
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
+  ctx.fillStyle = "#ff5577";
+  ctx.fillText(label, x + 12, midY - 10);
 
-  ctx.beginPath();
-  ctx.moveTo(x - 6, 10);
-  ctx.lineTo(x + 6, 10);
-  ctx.moveTo(x - 6, canvasSize - 10);
-  ctx.lineTo(x + 6, canvasSize - 10);
-  ctx.stroke();
+  /* ================= WARNING (TEXT ONLY) ================= */
+  planes.forEach((plane) => {
+    const distance = Math.abs(plane.x - x);
+
+    if (distance <= dangerDistance) {
+      ctx.font = "12px monospace";
+      ctx.fillStyle = "red";
+      ctx.textAlign = "center";
+      ctx.fillText("⚠ WARNING", plane.x, plane.y - 14);
+    }
+  });
 
   ctx.restore();
 }
