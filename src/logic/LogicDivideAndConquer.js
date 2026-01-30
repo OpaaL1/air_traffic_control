@@ -1,5 +1,3 @@
-// closestPair.js
-
 // Fungsi pembantu untuk menghitung jarak Euclidean
 const dist = (p1, p2) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
 
@@ -21,6 +19,8 @@ function bruteForce(pts) {
 
 // Inti Algoritma Divide & Conquer
 export function findClosestPair(points) {
+  if (points.length < 2) return { min: Infinity, pair: null };
+  
   // 1. Sort berdasarkan X (wajib untuk D&C)
   const sortedX = [...points].sort((a, b) => a.x - b.x);
   
@@ -54,4 +54,35 @@ export function findClosestPair(points) {
   }
 
   return recursive(sortedX);
+}
+
+// === TAMBAHKAN INI UNTUK APP.JS ===
+export function calculateMetrics(n) {
+  if (n < 2) return { bf: 0, dc: 0, efficiency: 0 };
+
+  // Rumus Brute Force: n(n-1)/2
+  const bf = (n * (n - 1)) / 2; 
+  
+  // Rumus Divide & Conquer: n log n
+  const dc = Math.round(n * Math.log2(n)); 
+  
+  // Menghitung persentase efisiensi
+  const efficiency = ((1 - dc / (bf || 1)) * 100).toFixed(1);
+
+  return { 
+    bf: Math.floor(bf), 
+    dc: Math.floor(dc), 
+    efficiency 
+  };
+}
+
+export function benchmarkSearch(points, algorithmFn) {
+  const start = performance.now();
+  const result = algorithmFn(points);
+  const end = performance.now();
+  
+  return {
+    time: (end - start).toFixed(4), // Waktu dalam milidetik
+    result: result
+  };
 }
