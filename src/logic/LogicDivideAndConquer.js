@@ -1,7 +1,9 @@
-// Fungsi pembantu untuk menghitung jarak Euclidean
-const dist = (p1, p2) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
+// 1. Fungsi pembantu: Menghitung jarak Euclidean antara dua titik
+const dist = (p1, p2) => {
+  return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+};
 
-// Algoritma Brute Force (digunakan untuk base case kecil < 4 titik)
+// 2. Algoritma Brute Force (Base case untuk < 4 titik)
 function bruteForce(pts) {
   let min = Infinity;
   let pair = null;
@@ -17,72 +19,71 @@ function bruteForce(pts) {
   return { min, pair };
 }
 
-// Inti Algoritma Divide & Conquer
+// 3. Inti Algoritma Divide & Conquer (D&C)
 export function findClosestPair(points) {
   if (points.length < 2) return { min: Infinity, pair: null };
-  
-  // 1. Sort berdasarkan X (wajib untuk D&C)
+
+  // Sort awal (Preprocessing)
   const sortedX = [...points].sort((a, b) => a.x - b.x);
-  
-  function recursive(pts) {
-    if (pts.length <= 3) return bruteForce(pts);
+  const sortedY = [...points].sort((a, b) => a.y - b.y);
 
-    const mid = Math.floor(pts.length / 2);
-    const midPoint = pts[mid];
+  function recursive(ptsX, ptsY) {
+    // Jika titik sedikit, gunakan Brute Force
+    if (ptsX.length <= 3) return bruteForce(ptsX);
 
-    // DIVIDE: Bagi menjadi kiri dan kanan
-    const leftRes = recursive(pts.slice(0, mid));
-    const rightRes = recursive(pts.slice(mid));
+    // Tentukan titik tengah
+    const mid = Math.floor(ptsX.length / 2);
+    const midPoint = ptsX[mid];
 
-    // CONQUER: Ambil jarak terkecil dari kedua sisi
+    // Bagi ptsY menjadi dua bagian (kiri dan kanan midPoint)
+    const leftY = ptsY.filter(p => p.x <= midPoint.x);
+    const rightY = ptsY.filter(p => p.x > midPoint.x);
+
+    // Rekursi kiri dan kanan
+    const leftRes = recursive(ptsX.slice(0, mid), leftY);
+    const rightRes = recursive(ptsX.slice(mid), rightY);
+
+    // Ambil hasil terkecil dari kedua sisi
     let dMin = leftRes.min < rightRes.min ? leftRes : rightRes;
 
-    // COMBINE: Cek area di tengah (strip)
-    const strip = pts.filter(p => Math.abs(p.x - midPoint.x) < dMin.min);
-    const stripSortedY = strip.sort((a, b) => a.y - b.y);
+    // Filter "Strip": Titik-titik yang jarak X-nya ke garis tengah < dMin
+    const strip = ptsY.filter(p => Math.abs(p.x - midPoint.x) < dMin.min);
 
-    for (let i = 0; i < stripSortedY.length; i++) {
-      for (let j = i + 1; j < stripSortedY.length && (stripSortedY[j].y - stripSortedY[i].y) < dMin.min; j++) {
-        let d = dist(stripSortedY[i], stripSortedY[j]);
+    // Cek titik di dalam strip (Hanya perlu cek maksimal 7 titik setelahnya)
+    for (let i = 0; i < strip.length; i++) {
+      for (
+        let j = i + 1; 
+        j < strip.length && (strip[j].y - strip[i].y) < dMin.min; 
+        j++
+      ) {
+        let d = dist(strip[i], strip[j]);
         if (d < dMin.min) {
-          dMin = { min: d, pair: [stripSortedY[i], stripSortedY[j]] };
+          dMin = { min: d, pair: [strip[i], strip[j]] };
         }
       }
     }
-
     return dMin;
   }
 
-  return recursive(sortedX);
+  return recursive(sortedX, sortedY);
 }
 
-// === TAMBAHKAN INI UNTUK APP.JS ===
+// 4. Metrik Analisis untuk Tabel di UI
 export function calculateMetrics(n) {
   if (n < 2) return { bf: 0, dc: 0, efficiency: 0 };
 
-  // Rumus Brute Force: n(n-1)/2
-  const bf = (n * (n - 1)) / 2; 
+  // Rumus Brute Force: n(n-1)/2 perbandingan
+  const bf = Math.round((n * (n - 1)) / 2);
   
-  // Rumus Divide & Conquer: n log n
-  const dc = Math.round(n * Math.log2(n)); 
-  
+  // Rumus D&C: n * log2(n) perbandingan
+  const dc = Math.round(n * Math.log2(n));
+
   // Menghitung persentase efisiensi
-  const efficiency = ((1 - dc / (bf || 1)) * 100).toFixed(1);
+  const efficiency = bf > 0 ? Math.round(((bf - dc) / bf) * 100) : 0;
 
-  return { 
-    bf: Math.floor(bf), 
-    dc: Math.floor(dc), 
-    efficiency 
-  };
-}
-
-export function benchmarkSearch(points, algorithmFn) {
-  const start = performance.now();
-  const result = algorithmFn(points);
-  const end = performance.now();
-  
   return {
-    time: (end - start).toFixed(4), // Waktu dalam milidetik
-    result: result
+    bf: bf.toLocaleString(),
+    dc: dc.toLocaleString(),
+    efficiency: efficiency > 0 ? efficiency : 0
   };
 }

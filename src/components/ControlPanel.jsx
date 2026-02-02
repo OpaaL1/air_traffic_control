@@ -66,7 +66,7 @@ function ControlPanel({ points, setPoints }) {
             <span className="badge bg-success text-dark">ACTIVE</span>
           </div>
           <div className="d-flex justify-content-between align-items-center">
-            <span className="text-secondary small">Total Titik:</span>
+            <span className="text-secondary small">Total Pesawat:</span>
             <span className="text-success fw-mono"><b>{points.length}</b></span>
           </div>
         </div>
