@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css'; // Pastikan CSS kamu tetap di-import
 import ControlPanel from './components/ControlPanel';
 import RadarCanvas from './components/RadarCanvas';
-import { calculateMetrics } from './logic/LogicDivideAndConquer'; // Import fungsi metrik
+import { calculateMetrics } from './logic/LogicDivideAndConquer';
 
 function App() {
   const [points, setPoints] = useState([]);
@@ -19,34 +20,47 @@ function App() {
   const metrics = calculateMetrics(points.length);
 
   return (
-    <div className="container-fluid bg-dark text-white vh-100 p-0 overflow-hidden">
+    <div 
+      className="container-fluid bg-dark text-white vh-100 p-0 overflow-hidden"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/background1.jpg')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+        backgroundRepeat: 'no-repeat',
+        position: 'relative'
+      }}
+    >
       {/* Header Area */}
-      <header className="p-3 border-bottom border-secondary bg-black d-flex justify-content-between align-items-center">
-        <h4 className="m-0 text-success fw-bold">
+      <header 
+        className="p-3 border-bottom border-secondary bg-black d-flex justify-content-between align-items-center"
+        style={{ position: 'relative', zIndex: 10 }}
+      >
+        <h4 className="m-0 text-success fw-bold text-uppercase">
           SISTEM ATC PESAWAT
         </h4>
-        <span className="badge border border-success text-success small">RADAR ACTIVE</span>
+        <span className="badge border border-success text-success small px-3 py-2">RADAR ACTIVE</span>
       </header>
 
-      <div className="row g-0 h-100">
+      <div className="row g-0 h-100" style={{ position: 'relative', zIndex: 5 }}>
         {/* KIRI: CONTROL PANEL */}
-        <div className="col-md-3 border-end border-secondary p-4 bg-dark bg-opacity-25">
+        <div className="col-md-3 border-end border-secondary p-4 bg-dark bg-opacity-50">
           <ControlPanel points={points} setPoints={setPoints} />
         </div>
 
         {/* TENGAH: RADAR DISPLAY */}
-        <div className="col-md-6 d-flex align-items-center justify-content-center bg-black">
+        <div className="col-md-6 d-flex align-items-center justify-content-center bg-transparent">
           <RadarCanvas points={points} setAnalysis={updateAnalysis} />
         </div>
 
         {/* KANAN: ALGORITHM ANALYSIS */}
-        <div className="col-md-3 border-start border-secondary p-4 bg-black">
+        <div className="col-md-3 border-start border-secondary p-4 bg-black bg-opacity-75">
           <h5 className="text-info fw-bold mb-4">ALGORITHM ANALYSIS</h5>
           
           {/* Box Monitoring Jarak */}
-          <div className="p-3 border border-secondary rounded mb-4 bg-dark bg-opacity-10">
+          <div className="p-3 border border-secondary rounded mb-4 bg-dark">
             <p className="small text-secondary mb-1">MINIMUM DISTANCE</p>
-            <h2 className={analysis.distance < 60 ? "text-danger animate-pulse" : "text-success"}>
+            <h2 className={analysis.distance < 60 ? "text-danger" : "text-success"}>
               {analysis.distance ? analysis.distance.toFixed(2) : "0.00"} <span className="h6">NM</span>
             </h2>
             <p className={`small fw-bold mb-0 ${analysis.distance < 60 ? "text-danger" : "text-success"}`}>
@@ -58,16 +72,15 @@ function App() {
           <div className="table-responsive">
             <table className="table table-dark table-sm table-bordered border-secondary small">
               <thead>
-                <tr className="text-info">
+                <tr className="text-info text-center">
                   <th>Metric</th>
                   <th>Brute Force</th>
-                  <th>D&C (Active)</th>
+                  <th>D&C</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
                   <td>Complexity</td>
-                  {/* Perbaikan: Menggunakan tag sup agar pangkat terlihat rapi tanpa karakter aneh */}
                   <td>O(n<sup>2</sup>)</td>
                   <td className="text-info fw-bold">O(n log n)</td>
                 </tr>
@@ -77,9 +90,8 @@ function App() {
                   <td className="text-success fw-bold">{metrics.dc}</td>
                 </tr>
                 <tr>
-                  <td>Efficiency</td>
-                  <td colSpan="2" className="text-center text-warning small">
-                    D&C is {metrics.efficiency}% more efficient
+                  <td colSpan="3" className="text-center text-warning p-2">
+                    D&C is <b>{metrics.efficiency}%</b> more efficient
                   </td>
                 </tr>
               </tbody>
@@ -90,11 +102,11 @@ function App() {
           {analysis.pair && (
             <div className="mt-4 p-3 border border-info rounded bg-info bg-opacity-10">
               <p className="small text-info mb-1 fw-bold">CLOSEST PAIR DATA</p>
-              <div style={{ fontSize: '11px' }} className="font-monospace text-light">
-                TARGET 1: {analysis.pair[0].id} <br/>
-                TARGET 2: {analysis.pair[1].id} <br/>
+              <div style={{ fontSize: '11px' }} className="font-monospace text-light opacity-75">
+                TARGET 1: <span className="text-info">{analysis.pair[0].id}</span> <br/>
+                TARGET 2: <span className="text-info">{analysis.pair[1].id}</span> <br/>
                 <hr className="my-2 border-info opacity-25" />
-                D&C Split Center: {(analysis.pair[0].x + analysis.pair[1].x) / 2} px
+                D&C Split Center: {((analysis.pair[0].x + analysis.pair[1].x) / 2).toFixed(1)} px
               </div>
             </div>
           )}
