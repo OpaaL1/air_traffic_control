@@ -1,4 +1,3 @@
-// DividingLine.jsx
 export function drawDividingLine({
   ctx,
   x,
@@ -9,14 +8,14 @@ export function drawDividingLine({
 
   ctx.save();
 
-  /* ================= MAIN LINE ================= */
+  // MAIN LINE
   ctx.beginPath();
   ctx.moveTo(x, 0);
   ctx.lineTo(x, canvasSize);
 
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
-  ctx.setLineDash([8, 6]); // lebih rapi
+  ctx.setLineDash([8, 6]);
   ctx.shadowColor = color;
   ctx.shadowBlur = 8;
 
@@ -25,7 +24,7 @@ export function drawDividingLine({
   ctx.setLineDash([]);
   ctx.shadowBlur = 0;
 
-  /* ================= CENTER MARKER ================= */
+  // CENTER MARKER 
   const midY = canvasSize / 2;
 
   ctx.beginPath();
@@ -33,14 +32,14 @@ export function drawDividingLine({
   ctx.fillStyle = color;
   ctx.fill();
 
-  /* ================= LABEL ================= */
+  // LABEL
   ctx.fillStyle = color;
   ctx.font = "11px monospace";
   ctx.textAlign = "left";
 
   ctx.fillText(`X = ${Math.round(x)}`, x + 8, midY - 8);
 
-  /* ================= TOP & BOTTOM TICKS ================= */
+  // TOP & BOTTOM TICKS
   ctx.strokeStyle = color;
   ctx.lineWidth = 1.5;
 

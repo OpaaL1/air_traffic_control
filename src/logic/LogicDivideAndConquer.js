@@ -1,7 +1,6 @@
-// Fungsi pembantu untuk menghitung jarak Euclidean
 const dist = (p1, p2) => Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
 
-// Algoritma Brute Force (digunakan untuk base case kecil < 4 titik)
+// Algoritma Brute Force
 function bruteForce(pts) {
   let min = Infinity;
   let pair = null;
@@ -21,7 +20,7 @@ function bruteForce(pts) {
 export function findClosestPair(points) {
   if (points.length < 2) return { min: Infinity, pair: null };
   
-  // 1. Sort berdasarkan X (wajib untuk D&C)
+  // 1. Sort berdasarkan X
   const sortedX = [...points].sort((a, b) => a.x - b.x);
   
   function recursive(pts) {
@@ -30,14 +29,14 @@ export function findClosestPair(points) {
     const mid = Math.floor(pts.length / 2);
     const midPoint = pts[mid];
 
-    // DIVIDE: Bagi menjadi kiri dan kanan
+    // DIVIDE
     const leftRes = recursive(pts.slice(0, mid));
     const rightRes = recursive(pts.slice(mid));
 
-    // CONQUER: Ambil jarak terkecil dari kedua sisi
+    // CONQUER
     let dMin = leftRes.min < rightRes.min ? leftRes : rightRes;
 
-    // COMBINE: Cek area di tengah (strip)
+    // COMBINE
     const strip = pts.filter(p => Math.abs(p.x - midPoint.x) < dMin.min);
     const stripSortedY = strip.sort((a, b) => a.y - b.y);
 
@@ -56,7 +55,6 @@ export function findClosestPair(points) {
   return recursive(sortedX);
 }
 
-// === TAMBAHKAN INI UNTUK APP.JS ===
 export function calculateMetrics(n) {
   if (n < 2) return { bf: 0, dc: 0, efficiency: 0 };
 
@@ -82,7 +80,7 @@ export function benchmarkSearch(points, algorithmFn) {
   const end = performance.now();
   
   return {
-    time: (end - start).toFixed(4), // Waktu dalam milidetik
+    time: (end - start).toFixed(4), 
     result: result
   };
 }

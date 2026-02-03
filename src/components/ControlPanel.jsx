@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const SPEED = 0.1; // HARUS SAMA DENGAN RadarCanvas
+const SPEED = 0.1; 
 
 function ControlPanel({ points, setPoints }) {
   const [count, setCount] = useState(20);
@@ -9,17 +9,17 @@ function ControlPanel({ points, setPoints }) {
   const newPoints = [];
   for (let i = 0; i < count; i++) {
     const angle = Math.random() * Math.PI * 2;
-    const randomAlt = Math.floor(Math.random() * 30) + 100; // Contoh: F100 - F130
+    const randomAlt = Math.floor(Math.random() * 30) + 100; 
 
     newPoints.push({
-      id: `AC${Math.floor(1000 + Math.random() * 9000)}`, // Menambah Callsign unik
+      id: `AC${Math.floor(1000 + Math.random() * 9000)}`,
       x: Math.random() * 500,
       y: Math.random() * 500,
       vx: Math.cos(angle) * SPEED,
       vy: Math.sin(angle) * SPEED,
       alt: randomAlt,
-      history: [], // Akan menyimpan {x, y}
-      isConflict: false // Flag untuk status bahaya
+      history: [], 
+      isConflict: false 
   });
   }
 
